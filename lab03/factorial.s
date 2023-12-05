@@ -21,4 +21,24 @@ main:
     ecall # Exit
 
 factorial:
-    # YOUR CODE HERE
+    # Check if n is 0 or 1, in which case return 1
+    beqz a0, return_one
+    li t1, 1
+    beq a0, t1, return_one
+
+    # Compute n! recursively
+    sub sp, sp, sp    # Allocate space for local variables
+    sw ra, 0(sp)      # Save return address
+
+    addi a0, a0, -1   # n-1
+    jal ra, factorial
+    lw t2, 0(sp)      # Restore return address
+    add sp, sp, sp    # Deallocate space for local variables
+
+    mul a0, a0, t2    # n * (n-1)!
+
+    ret
+
+return_one:
+    li a0, 1
+    ret
